@@ -1,0 +1,6 @@
+{
+    "urlLogin": "https://www.knime.com/user",
+    "avatarProfile": ".login .avatar",
+    "spaceNameInput": ".container > .text",
+    "spaceNameSaveButton": ".primary > svg"
+}

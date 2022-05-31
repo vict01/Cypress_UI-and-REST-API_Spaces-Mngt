@@ -1,0 +1,16 @@
+{
+    "baseUrl": "https://hub.knime.com/",
+    "integrationFolder": "cypress/integration",
+    "viewportWidth": 1800,
+    "viewportHeight": 1300,
+    "defaultCommandTimeout": 6000,
+    "chromeWebSecurity": false,
+    "reporterOptions": {
+        "reportDir": "cypress/reports/html",
+        "charts": true,
+        "reportPageTitle": "My Test Suite",
+        "embeddedScreenShots": true,
+        "inLineAssets": true,
+        "video": true
+    }
+}
