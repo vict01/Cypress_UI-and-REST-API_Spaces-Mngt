@@ -1,10 +1,18 @@
 /// <reference types="cypress" />
-import * as fixture from "../fixtures/fixtures.json"
+import { webElements } from '../fixtures/fixtures.json'
 
 describe('Business Critical Scenarios', () => {
+    let myNewSpace, auth
+
     before(() => {
         cy.goToLogin()
         cy.login();
+    })
+
+    beforeEach(() => {
+        myNewSpace = 'My Space ' + Date.now()
+        auth = `Bearer ${ Cypress.env('varToken') }`;
+        cy.goToSpaces()
     })
 
     it('1.1. Verify Login successfully', () => {
@@ -12,16 +20,14 @@ describe('Business Critical Scenarios', () => {
     });
 
     it('1.2. Create new private space successfully', () => {
-        const myNewSpace = 'My private space ' + Date.now()
-        cy.goToSpaces()
-        cy.waitUntilPageLoads()
+        cy.waitSpacesMenuIsVisible()
         cy.acceptCookies()
         cy.getAmountOfSpaces().then(element => {
             cy.log(`The amount of spaces is: ${element}`)
             cy.clickOnCreateNewPrivateSpace()
             cy.typeTextInSpaceNameInput(myNewSpace)
-            cy.get(fixture.spaceNameSaveButton).click({ force: true })
-            cy.getTextFromInput(fixture.spaceNameInput).then(element => {
+            cy.get(webElements.spaceNameSaveButton).click({ force: true })
+            cy.getTextFromInput(webElements.spaceNameInput).then(element => {
                 cy.log(`The name space inserted was: ${element}`)
                 expect(element).eq(myNewSpace)
             })
@@ -36,16 +42,14 @@ describe('Business Critical Scenarios', () => {
     });
 
     it('1.3. Create new public space successfully', () => {
-        const myNewSpace = 'My public space ' + Date.now()
-        cy.goToSpaces()
-        cy.waitUntilPageLoads()
+        cy.waitSpacesMenuIsVisible()
         cy.acceptCookies()
         cy.getAmountOfSpaces().then(element => {
             cy.log(`The amount of spaces is: ${element}`)
             cy.clickOnCreateNewPublicSpace()
             cy.typeTextInSpaceNameInput(myNewSpace)
-            cy.get(fixture.spaceNameSaveButton).click({ force: true })
-            cy.getTextFromInput(fixture.spaceNameInput).then(element => {
+            cy.get(webElements.spaceNameSaveButton).click({ force: true })
+            cy.getTextFromInput(webElements.spaceNameInput).then(element => {
                 cy.log(`The name space inserted was: ${element}`)
                 expect(element).eq(myNewSpace)
             })
@@ -60,9 +64,8 @@ describe('Business Critical Scenarios', () => {
     });
 
     it('1.4. Delete space successfully', () => {
-        const SpacesById = 1
-        cy.goToSpaces()
-        cy.waitUntilPageLoads()
+        const SpacesById = 0
+        cy.waitSpacesMenuIsVisible()
         cy.acceptCookies()
         cy.getSpacesById(SpacesById).then(spaceName => {
             var str = spaceName.text()
@@ -92,9 +95,7 @@ describe('Business Critical Scenarios', () => {
     });
 
     it('1.5. Delete all spaces successfully', () => {
-        const auth = `Bearer ${ Cypress.env('varToken') }`;
-        cy.goToSpaces()
-        cy.waitUntilPageLoads()
+        cy.waitSpacesMenuIsVisible()
         cy.acceptCookies()
         cy.getAmountOfSpaces().then(element => {
             cy.log(`The amount of spaces is: ${element}`)

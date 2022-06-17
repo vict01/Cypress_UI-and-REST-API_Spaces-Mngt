@@ -1,5 +1,5 @@
-import { credentials } from "../support/constants"
-const urlApi = 'https://api.hub.knime.com/repository'
+import { appData, credentials } from "../fixtures/fixtures.json"
+const urlApi = appData.urlApi + 'repository'
 
 Cypress.Commands.add('loginApi', (user = credentials.username, pwd = credentials.password) => {
     cy.goToLogin()
@@ -27,7 +27,6 @@ function setToken() {
 Cypress.Commands.add('setToken', setToken)
 
 function getCreateOption(spaceName, auth, isPrivate = true, user = credentials.username) {
-    spaceName = spaceName.trim().replace(/ /g, '%20');
     return {
         url: `${urlApi}/Users/${user}/${spaceName}`,
         qs: {
@@ -55,7 +54,7 @@ Cypress.Commands.add('createSpaceApi', (spaceName, auth) => {
 })
 
 Cypress.Commands.add('deleteSpaceApi', (spaceName, auth, user = credentials.username) => {
-    spaceName = spaceName.trim().replace(/ /g, '%20');
+    spaceName = spaceName.trim()
     cy
         .request({
             url: `${urlApi}//Users/${user}/${spaceName}`,

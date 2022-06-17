@@ -1,13 +1,19 @@
 /// <reference types="cypress" />
 
 describe('REST-API Testing', () => {
+    let auth,
+        spaceName
+
     before(() => {
         cy.loginApi();
     });
 
+    beforeEach(() => {
+        auth = `Bearer ${ Cypress.env('varToken') }`;
+        spaceName = 'My Space ' + Date.now()
+    })
+
     it('4.1. Create space successfully', () => {
-        const auth = `Bearer ${ Cypress.env('varToken') }`;
-        const spaceName = 'My Space ' + Date.now()
         cy.createSpaceApi(spaceName, auth).then((resp) => {
             expect(resp.requestHeaders).toString().includes(`"authorization":"Bearer`)
             expect(resp.status).to.eq(201)
@@ -20,8 +26,6 @@ describe('REST-API Testing', () => {
     });
 
     it('4.2. Create 2 spaces with the same name', () => {
-        const auth = `Bearer ${ Cypress.env('varToken') }`;
-        const spaceName = 'My Space ' + Date.now()
         cy.createSpaceApi(spaceName, auth).then((resp) => {
             expect(resp.status).to.eq(201)
             expect(resp.statusText).to.contains('Created')
@@ -35,8 +39,6 @@ describe('REST-API Testing', () => {
     });
 
     it('4.3. Delete space successfully', () => {
-        const auth = `Bearer ${ Cypress.env('varToken') }`;
-        const spaceName = 'My space2 ' + Date.now()
         cy.createSpaceApi(spaceName, auth)
         cy.deleteSpaceApi(spaceName, auth)
     });

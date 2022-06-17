@@ -1,5 +1,5 @@
-import * as fixture from "../fixtures/fixtures.json"
-import { credentials } from "../support/constants"
+import { appData, credentials, webElements } from "../fixtures/fixtures.json"
+const spacesUrl = appData.urlApi + '/onboarding/*FOfYyvjxBAjkofcR'
 
 Cypress.Commands.add('goToLogin', () => {
     cy.visit('/')
@@ -23,13 +23,24 @@ Cypress.Commands.add('fillOutLoginForm', (user = credentials.username, pwd = cre
     cy.findByLabelText(/Password/i, { timeout: 10000 }).clear().type(pwd)
 })
 
-Cypress.Commands.add('waitUntilPageLoads', (count = 2000) => {
-    cy.wait(count)
+Cypress.Commands.add('waitUntilPageLoads', () => {
+    window.onload = () => {
+        cy.log('page is fully loaded');
+    };
+})
+
+Cypress.Commands.add('waitUntilSpaceElementsLoad', () => {
+    cy.intercept(spacesUrl).as('spaceLoaded')
+        .wait('@spaceLoaded', { timeout: 20000 })
+})
+
+Cypress.Commands.add('waitSpacesMenuIsVisible', () => {
+    cy.get('.create-space-card > .title', { timeout: 10000 }).should('be.visible')
 })
 
 Cypress.Commands.add('acceptCookies', () => {
     cy.get('body').then($body => {
-        if ($body.find('.accept-button').length > 0) {
+        if ($body.find('.accept-button').length) {
             $body.find('.accept-button').trigger('click', { force: true })
         }
     });
@@ -37,7 +48,7 @@ Cypress.Commands.add('acceptCookies', () => {
 
 Cypress.Commands.add('assertLogin', () => {
     cy.url().should('eq', `${Cypress.config().baseUrl}`)
-    cy.get(fixture.avatarProfile, { timeout: 10000 }).should('be.visible')
+    cy.get(webElements.avatarProfile, { timeout: 10000 }).should('be.visible')
     cy.window().its('localStorage.cookieConsent').should('to.be', true)
 })
 
@@ -49,12 +60,12 @@ Cypress.Commands.add('relogin', () => {
 })
 
 Cypress.Commands.add('goToProfile', () => {
-    cy.get(fixture.avatarProfile, { timeout: 10000 }).click({ force: true })
+    cy.get(webElements.avatarProfile, { timeout: 10000 }).click({ force: true })
     cy.findByText(/Profile/i).click()
 })
 
 Cypress.Commands.add('logout', () => {
-    cy.get(fixture.avatarProfile, { timeout: 10000 }).click({ force: true })
+    cy.get(webElements.avatarProfile, { timeout: 10000 }).click({ force: true })
     cy.findByText(/Logout/i).click()
 })
 
@@ -99,7 +110,7 @@ Cypress.Commands.add('getSpacesById', (spaceId) => {
 })
 
 Cypress.Commands.add('goToSpaces', () => {
-    cy.get(fixture.avatarProfile, { timeout: 10000 }).click({ force: true })
+    cy.get(webElements.avatarProfile, { timeout: 10000 }).click({ force: true })
     cy.findAllByText(/Spaces/i, { timeout: 10000 })
         .click({ multiple: true, force: true })
 })
@@ -113,16 +124,16 @@ Cypress.Commands.add('clickOnSpacesInNavBar', () => {
 })
 
 Cypress.Commands.add('clickOnCreateNewPrivateSpace', () => {
-    cy.get('.buttons').contains('Private space').click();
+    cy.get('.buttons').contains('Private space').click({ force: true });
 })
 
 Cypress.Commands.add('clickOnCreateNewPublicSpace', () => {
-    cy.get('.buttons').contains('Public space').click();
+    cy.get('.buttons').contains('Public space').click({ force: true });
 })
 
 Cypress.Commands.add('typeTextInSpaceNameInput', (spaceName) => {
     spaceName = spaceName.trim()
-    cy.get(fixture.spaceNameInput, { timeout: 10000 }).clear()
+    cy.get(webElements.spaceNameInput, { timeout: 10000 }).clear()
         .type(spaceName)
 })
 

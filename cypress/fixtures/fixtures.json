@@ -1,6 +1,15 @@
 {
-    "urlLogin": "https://www.knime.com/user",
-    "avatarProfile": ".login .avatar",
-    "spaceNameInput": ".container > .text",
-    "spaceNameSaveButton": ".primary > svg"
+    "appData": {
+        "urlLogin": "https://www.knime.com/user",
+        "urlApi": "https://api.hub.knime.com/"
+    },
+    "credentials": {
+        "username": "vict01",
+        "password": "Abc123"
+    },
+    "webElements": {
+        "avatarProfile": ".login .avatar",
+        "spaceNameInput": ".container > .text",
+        "spaceNameSaveButton": ".primary > svg"
+    }
 }
